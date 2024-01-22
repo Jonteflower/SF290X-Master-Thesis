@@ -1,0 +1,9 @@
+
+# Best Beta: 0.64, with an average error of: 2.1049123475816645 with all H
+# H >= 95 Best Beta: 0.665, with an average error of: 2.236589940094765
+
+H: 95, Best Beta: 0.628, with an average error of: 1.2255845605028703
+H: 96, Best Beta: 0.642, with an average error of: 1.4387359680995429
+H: 97, Best Beta: 0.658, with an average error of: 1.6097261926555602
+H: 98, Best Beta: 0.676, with an average error of: 1.651459591119365
+H: 99, Best Beta: 0.7010000000000001, with an average error of: 1.3128008389974506
