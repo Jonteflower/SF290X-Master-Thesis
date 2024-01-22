@@ -1,19 +1,10 @@
 import numpy as np
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from generate_data.data import get_beta_values
 
-# Mapping of H values to their optimal beta values
-beta_values = {
-    90: 0.5920999999999986,
-    91: 0.5968999999999981,
-    92: 0.6016999999999976,
-    93:0.6079999999999969,
-    94: 0.6168999999999959,
-    95: 0.628,
-    96: 0.642,
-    97: 0.658,
-    98: 0.676,
-    99: 0.701
-}
-
+beta_values = get_beta_values()
 # Function to adjust the barrier for discrete monitoring
 def adjusted_barrier(T, H, sigma,m, beta):
 
