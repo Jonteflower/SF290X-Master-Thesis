@@ -1,8 +1,17 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from generate_data.data import get_base_variables, get_exact_values
 import numpy as np
 from joblib import Parallel, delayed
+import time
 
 # Function to price a down-and-out call option using Monte Carlo simulation
 # Source https://quant.stackexchange.com/questions/28036/black-scholes-model-for-down-and-out-european-call-option-using-monte-carlo
+
+# Get base variables
+m, r, T, sigma, S0, K, trading_days, beta, H_init, q = get_base_variables()
+correct_values = get_exact_values()
 
 def down_and_out_call_MC( m, r, T, sigma, S0, K, H, n = 5*10**6):
     
@@ -22,21 +31,18 @@ def down_and_out_call_MC( m, r, T, sigma, S0, K, H, n = 5*10**6):
     price = np.exp(-r * T) * np.mean(payoff)
     return price
 
-# Example usage:
-m = 50    # number of time steps
-r = 0.1   # risk-free rate
-T = 0.2      # time to maturity
-sigma = 0.3 # variance of the underlying asset
-S0 = 100   # initial stock price
-K = 100    # strike price
-#H = 85     # barrier level
-
 def main():
-    h_values = range(85, 100)
+    h_values = range(85, 87)
+    n = 6*(10**6)
+    start = time.time()
 
+    print("Number of steps ", m*n/10**9,  "Billion")
     for H in h_values:
-        price = down_and_out_call_MC(m, r, T, sigma, S0, K, H, 5*10**7)
-        price = str(round(price, 4))
-        print("Barrier H: ",H, "Price: ", price)
+        price = down_and_out_call_MC(m, r, T, sigma, S0, K, H, n)
+        price = round(price, 4)
+        print("Barrier H:",H, " ", "Price:", price, " ", "Difference:", round(price-correct_values[H],5))
     
-main()
+    end = time.time()
+    print("Time taken per iteration", (round((end-start)/len(h_values))), "seconds")
+    
+#main()

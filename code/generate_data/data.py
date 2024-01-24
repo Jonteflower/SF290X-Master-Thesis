@@ -148,3 +148,25 @@ def get_beta_values():
 
 
 
+def get_exact_values():
+    
+    correct_values = {
+        85: 6.322,
+        86: 6.306,
+        87: 6.281,
+        88: 6.242,
+        89: 6.184,
+        90: 6.098,
+        91: 5.977,
+        92: 5.810,
+        93: 5.584,
+        94: 5.288,
+        95: 4.907,
+        96: 4.427,
+        97: 3.834,
+        98: 3.126,
+        99: 2.337  # Corrected value assuming OCR error
+    }
+    
+    return correct_values
+

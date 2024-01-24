@@ -6,15 +6,16 @@ from equations.down_and_out_call_exact import down_and_call_book
 from equations.adjusted_barrier import adjusted_barrier
 from equations.down_and_out_call_MC import down_and_out_call_MC
 from data import get_base_variables
+from equations.down_and_out_call_Brown import price_down_and_out_call_brown
 
 # Get base variables
 m, r, T, sigma, S0, K, trading_days, beta, H_init, q = get_base_variables() # Modify as needed
-H = 99
+H = 85
 
 def compute_specific_prices():
     # Compute prices
     H_adj_down, H_adj_up = adjusted_barrier(T, H, sigma, m, beta)
-    price_mc = round(down_and_out_call_MC(m, r, T, sigma, S0, K, H), 3)
+    price_mc = round(price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q), 3)
     price = round(down_and_call_book(S0, K, T, r, q, sigma, H, H, H), 3)
     price_adj = round(down_and_call_book(S0, K, T, r, q, sigma, H, H_adj_down, H_adj_up), 3)
 
