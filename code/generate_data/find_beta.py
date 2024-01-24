@@ -3,9 +3,9 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pandas as pd
 import numpy as np
+from joblib import Parallel, delayed
 from equations.down_and_out_call_exact import down_and_call_book
 from equations.adjusted_barrier import adjusted_barrier
-from equations.down_and_out_call_MC import down_and_out_call_MC
 from data import get_base_variables
 
 # Get base variables
@@ -13,54 +13,55 @@ m, r, T, sigma, S0, K, trading_days, beta, H_init, q = get_base_variables()
 
 # Read the existing training data
 df = pd.read_csv('data.csv')
-df = df[df['H'] == 94]
-
-# Define the beta range
-beta_values = np.arange(0.6, 0.80001, 0.0001)  # Adjust the range as needed
-
-# Variables to store the best beta and its error
-best_beta = None
-min_error = float('inf')
+df = df[(df['sigma'] == 0.5 )]
 
 # Function to calculate percentage error
 def percentage_error(price_adj, price_mc):
     return abs((price_adj - price_mc) / price_mc) * 100
 
-# Total number of iterations for the progress bar
-total_iterations = len(beta_values) * len(df)
-current_iteration = 0
+# Function to find the best beta for a given H
+def find_best_beta_for_H(H, df):
+    min_error = float('inf')
+    best_beta = None
+    df_H = df[df['H'] == H]
 
-# Iterate over beta values
-for beta_candidate in beta_values:
-    total_error = 0
-    count = 0
+    # First iteration with larger step size
+    beta_values_large_step = np.arange(0.0, 1.0001, 0.1)
+    for beta_candidate in beta_values_large_step:
+        total_error = 0
+        for index, row in df_H.iterrows():
+            H_adj_down, H_adj_up = adjusted_barrier(row['T'], row['H'], row['sigma'], m, beta_candidate)
+            price_adj = down_and_call_book(S0, K, row['T'], r, q, row['sigma'], row['H'], H_adj_down, H_adj_up)
+            error = percentage_error(price_adj, row['price_mc'])
+            total_error += error
+        average_error = total_error / len(df_H)
+        if average_error < min_error:
+            min_error = average_error
+            best_beta = beta_candidate
 
-    # Loop through each row in the DataFrame
-    for index, row in df.iterrows():
-        # Calculate the adjusted price with the current beta_candidate
-        H_adj_down, H_adj_up = adjusted_barrier(row['T'], row['H'], row['sigma'], m, beta_candidate)
-        price_adj = down_and_call_book(S0, K, row['T'], r, q, row['sigma'], row['H'], H_adj_down, H_adj_up)
+    # Second iteration with smaller step size
+    beta_values_small_step = np.arange(best_beta - 0.1, best_beta + 0.1001, 0.0001)
+    for beta_candidate in beta_values_small_step:
+        total_error = 0
+        for index, row in df_H.iterrows():
+            H_adj_down, H_adj_up = adjusted_barrier(row['T'], row['H'], row['sigma'], m, beta_candidate)
+            price_adj = down_and_call_book(S0, K, row['T'], r, q, row['sigma'], row['H'], H_adj_down, H_adj_up)
+            error = percentage_error(price_adj, row['price_mc'])
+            total_error += error
+        average_error = total_error / len(df_H)
+        if average_error < min_error:
+            min_error = average_error
+            best_beta = beta_candidate
 
-        # Calculate the percentage error
-        error = percentage_error(price_adj, row['price_mc'])
-        total_error += error
-        count += 1
+    return H, best_beta, min_error
 
-        # Update current iteration and display progress
-        current_iteration += 1
-        progress = (current_iteration / total_iterations) * 100
-        print(f"Progress: {progress:.2f}%", end='\r')
+# Parallel computation for each unique H
+optimal_betas = Parallel(n_jobs=-1)(delayed(find_best_beta_for_H)(H, df) for H in df['H'].unique())
 
-    # Calculate average error for this beta_candidate
-    average_error = total_error / count
+# Convert results to a dictionary
+optimal_beta_dict = {H: {'beta': beta, 'error': error} for H, beta, error in optimal_betas}
 
-    # Check if this is the best beta so far
-    if average_error < min_error:
-        min_error = average_error
-        best_beta = beta_candidate
-
-# Print the best beta and its error
-# Best Beta: 0.64, with an average error of: 2.1049123475816645 with all H
-# H >= 95 Best Beta: 0.665, with an average error of: 2.236589940094765
-
-print(f"\nBest Beta: {best_beta}, with an average error of: {min_error}")
+# Print the best beta for each H
+print("For sigma value of ", df['sigma'].unique())
+for H, data in optimal_beta_dict.items():
+    print(f"H: {H}, Best Beta: {data['beta']}, with an average error of: {data['error']}")

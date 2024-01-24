@@ -2,9 +2,11 @@ import numpy as np
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from generate_data.data import get_beta_values
 
-beta_values = get_beta_values()
+# Fitted beta
+def fitted_beta(H):
+    return 0.0008218 * H**2 - 0.1434 * H + 6.833
+
 # Function to adjust the barrier for discrete monitoring
 def adjusted_barrier(T, H, sigma,m, beta):
 
@@ -24,9 +26,9 @@ def adjusted_barrier_custom(T, H, S0,K, sigma, m, beta):
     delta_T = T / m
 
     # Calculate the new Beta for the final 5% of the values
-    if abs(((S0-H)/S0)) <= 0.1:
-        beta = beta_values[H]
-        #print("New beta is ", beta)
+    if abs(((S0-H)/S0)) <= 0.3:
+        #beta = beta_values[H]
+        beta = fitted_beta(H)
 
     ### adjust the beta value
     H_adj_down = H * np.exp(-1 * beta * sigma * np.sqrt(delta_T))

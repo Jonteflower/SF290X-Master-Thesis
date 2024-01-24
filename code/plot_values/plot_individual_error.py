@@ -66,7 +66,6 @@ def plot_data_per_H(beta1, beta2, t_vals, errors_beta1, errors_beta2):
 # Beta values
 beta1 = 0.5826
 beta2 = 0.5826
-beta3 = 0.64
 
 # Data generation for both Betas
 t_vals, errors_beta1 = generate_data(beta1, "regular")

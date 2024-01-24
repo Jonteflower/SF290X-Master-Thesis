@@ -9,27 +9,28 @@ from equations.adjusted_barrier import adjusted_barrier
 from data import get_base_variables
 
 # Get base variables
-m, r, T, sigma, S0, K, trading_days, beta, H_init, q = get_base_variables()
+m, r, _, _, S0, K, trading_days, _, H_init, q = get_base_variables()
 
 # Read the existing training data
 df = pd.read_csv('data.csv')
-df = df[(df['H'] <= 92)]
 
 # Function to calculate percentage error
 def percentage_error(price_adj, price_mc):
     return abs((price_adj - price_mc) / price_mc) * 100
 
 # Function to find the best beta for a given H
-def find_best_beta_for_H(H, df):
+def find_best_beta_for_H(H, df_T_sigma):
     min_error = float('inf')
     best_beta = None
-    df_H = df[df['H'] == H]
+
+    # Filter dataframe for the current H value
+    df_H = df_T_sigma[df_T_sigma['H'] == H]
 
     # First iteration with larger step size
     beta_values_large_step = np.arange(0.0, 1.0001, 0.1)
     for beta_candidate in beta_values_large_step:
         total_error = 0
-        for index, row in df_H.iterrows():
+        for _, row in df_H.iterrows():
             H_adj_down, H_adj_up = adjusted_barrier(row['T'], row['H'], row['sigma'], m, beta_candidate)
             price_adj = down_and_call_book(S0, K, row['T'], r, q, row['sigma'], row['H'], H_adj_down, H_adj_up)
             error = percentage_error(price_adj, row['price_mc'])
@@ -43,7 +44,7 @@ def find_best_beta_for_H(H, df):
     beta_values_small_step = np.arange(best_beta - 0.1, best_beta + 0.1001, 0.0001)
     for beta_candidate in beta_values_small_step:
         total_error = 0
-        for index, row in df_H.iterrows():
+        for _, row in df_H.iterrows():
             H_adj_down, H_adj_up = adjusted_barrier(row['T'], row['H'], row['sigma'], m, beta_candidate)
             price_adj = down_and_call_book(S0, K, row['T'], r, q, row['sigma'], row['H'], H_adj_down, H_adj_up)
             error = percentage_error(price_adj, row['price_mc'])
@@ -55,12 +56,25 @@ def find_best_beta_for_H(H, df):
 
     return H, best_beta, min_error
 
-# Parallel computation for each unique H
-optimal_betas = Parallel(n_jobs=-1)(delayed(find_best_beta_for_H)(H, df) for H in df['H'].unique())
+# Initialize a list to store the results
+results = []
 
-# Convert results to a dictionary
-optimal_beta_dict = {H: {'beta': beta, 'error': error} for H, beta, error in optimal_betas}
+# Iterate over each unique combination of T and sigma
+for T in df['T'].unique():
+    for sigma in df['sigma'].unique():
+        df_T_sigma = df[(df['T'] == T) & (df['sigma'] == sigma)]
 
-# Print the best beta for each H
-for H, data in optimal_beta_dict.items():
-    print(f"H: {H}, Best Beta: {data['beta']}, with an average error of: {data['error']}")
+        # Parallel computation for each unique H
+        optimal_betas = Parallel(n_jobs=5)(delayed(find_best_beta_for_H)(H, df_T_sigma) for H in df_T_sigma['H'].unique())
+
+        # Append results
+        for H, beta, error in optimal_betas:
+            results.append({'T': T, 'sigma': sigma, 'H': H, 'Best Beta': beta, 'Average Error': error})
+
+# Convert results to a DataFrame
+results_df = pd.DataFrame(results)
+
+# Save the DataFrame to a CSV file
+results_df.to_csv('Beta_values.csv', index=False)
+
+print("Results saved to 'Beta_values.csv'")

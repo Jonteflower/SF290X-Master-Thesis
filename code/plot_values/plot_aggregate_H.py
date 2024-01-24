@@ -1,6 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,6 +15,7 @@ m, r, T, sigma, S0, K, trading_days, beta_default, H_init, q = get_base_variable
 # Iterations for the test case
 t_values = np.arange(0.2, 5.1, 0.1)
 h_values = range(90, 100)
+sigma = 0.1
 
 # The data file contains the exact values
 df = pd.read_csv('data.csv')

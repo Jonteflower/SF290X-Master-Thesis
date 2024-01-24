@@ -1,11 +1,11 @@
 import sys
 import os
+# Adjust the system path to include the parent directory
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
-# Adjust the system path to include the parent directory
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from equations.down_and_out_call_exact import down_and_call_book
 from equations.adjusted_barrier import adjusted_barrier, adjusted_barrier_custom
 from generate_data.data import get_base_variables

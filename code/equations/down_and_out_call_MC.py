@@ -3,6 +3,7 @@ from joblib import Parallel, delayed
 
 # Function to price a down-and-out call option using Monte Carlo simulation
 # Source https://quant.stackexchange.com/questions/28036/black-scholes-model-for-down-and-out-european-call-option-using-monte-carlo
+
 def down_and_out_call_MC( m, r, T, sigma, S0, K, H, n = 5*10**6):
     
     ## Variance
@@ -34,8 +35,8 @@ def main():
     h_values = range(85, 100)
 
     for H in h_values:
-        price = down_and_out_call_MC(m, r, T, sigma, S0, K, H, *10**6)
+        price = down_and_out_call_MC(m, r, T, sigma, S0, K, H, 5*10**7)
         price = str(round(price, 4))
         print("Barrier H: ",H, "Price: ", price)
     
-#main()
+main()
