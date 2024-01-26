@@ -1,0 +1,5 @@
+Meeting 1 
+Do a regression of H, T and Sigma 
+Extract the Monte Carlo to see connections
+Look at the paper and undertsna dht eeror term to incoporate higher order terms
+

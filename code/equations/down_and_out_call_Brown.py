@@ -5,7 +5,6 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from generate_data.data import get_base_variables, get_exact_values
 
-
 def price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n=10**7):
     n_paths = n  # Number of simulation paths
     n_steps = m     # Number of time steps
@@ -30,8 +29,8 @@ def price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n=10**7):
 
 def main(): 
     # Intial values
-    h_values = range(85, 87)
-    n = (10**7)
+    h_values = range(85, 86)
+    n = (5*10**7)
     start = time.time()
     
     # Get base variables
@@ -48,11 +47,11 @@ def main():
     for H in h_values:
         price = price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n)
         
-        print("Barrier H:",H, " ", "Price:", round(price, 4), " ", "Difference:", round(price-correct_values[H],4))
+        print("Barrier H:",H, " ", "Price:", round(price, 3), " ", "Difference:", round(price-correct_values[H],4))
     
     #Print results
     time_per_iteration = round((time.time()-start)/len(h_values), 1)
     
     print( "Time/iteration:", time_per_iteration, "s" )
     
-#main()
+main()

@@ -14,8 +14,8 @@ m, r, T, sigma, S0, K, trading_days, beta_default, H_init, q = get_base_variable
 
 # Iterations for the test case
 t_values = np.arange(0.2, 5.1, 0.1)
-h_values = range(90, 100)
-sigma = 0.1
+h_values = range(90, 91)
+sigma = 0.3
 
 # The data file contains the exact values
 df = pd.read_csv('data.csv')
@@ -34,7 +34,13 @@ def generate_data(beta, type):
                 H_adj_down, H_adj_up = adjusted_barrier(T, H, sigma, m, beta)
 
             price_adj = down_and_call_book(S0, K, T, r, q, sigma, H, H_adj_down, H_adj_up)
-            price_mc = df.loc[(df['T'] == T) & (df['sigma'] == sigma) & (df['H'] == H), 'price_mc'].values[0]
+            filtered_df = df.loc[(df['T'] == T) & (df['sigma'] == sigma) & (df['H'] == H), 'price_mc']
+            if not filtered_df.empty:
+                price_mc = filtered_df.values[0]
+            else:
+                # Handle the case where the filter results in no matches
+                print(f"No data found for T={T}, sigma={sigma}, H={H}")
+                continue  # Skip to the next iteration of the loop            
             error = round(abs((price_adj - price_mc) / price_mc * 100), 1)
 
             errors[H].append(error)
