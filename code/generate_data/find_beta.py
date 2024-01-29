@@ -6,7 +6,7 @@ import numpy as np
 from joblib import Parallel, delayed
 from equations.down_and_out_call_exact import down_and_call_book
 from equations.adjusted_barrier import adjusted_barrier
-from data import get_base_variables
+from generate_data.base_data import get_base_variables
 
 # Function to calculate percentage error
 def percentage_error(price_adj, price_mc):

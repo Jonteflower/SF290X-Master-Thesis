@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 import matplotlib.pyplot as plt
-from generate_data.data import get_beta_values
+from generate_data.base_data import get_beta_values
 
 # Get the beta values for different sigma values
 beta_values = get_beta_values()

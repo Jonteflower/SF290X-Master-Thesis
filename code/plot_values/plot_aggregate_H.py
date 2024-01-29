@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from equations.down_and_out_call_exact import down_and_call_book
 from equations.adjusted_barrier import adjusted_barrier, adjusted_barrier_custom
-from generate_data.data import get_base_variables
+from generate_data.base_data import get_base_variables
 
 # Base variables
 m, r, T, sigma, S0, K, trading_days, beta_default, H_init, q = get_base_variables()
