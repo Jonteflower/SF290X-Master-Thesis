@@ -6,7 +6,7 @@ from equations.down_and_out_call_exact import down_and_call_book
 from equations.adjusted_barrier import adjusted_barrier
 from equations.down_and_out_call_MC import down_and_out_call_MC
 from data import get_base_variables
-from equations.down_and_out_call_Brown import price_down_and_out_call_brown
+from code.equations.down_and_out_call_Brown_original import price_down_and_out_call_brown
 
 # Get base variables
 m, r, T, sigma, S0, K, trading_days, beta, H_init, q = get_base_variables() # Modify as needed

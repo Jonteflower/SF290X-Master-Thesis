@@ -32,8 +32,8 @@ def down_and_out_call_MC( m, r, T, sigma, S0, K, H, n = 5*10**6):
     return price
 
 def main():
-    h_values = range(85, 87)
-    n = 6*(10**6)
+    h_values = range(85, 86)
+    n = 8*(10**6)
     start = time.time()
 
     print("Number of steps ", m*n/10**9,  "Billion")
@@ -45,4 +45,4 @@ def main():
     end = time.time()
     print("Time taken per iteration", (round((end-start)/len(h_values))), "seconds")
     
-#main()
+main()
