@@ -6,6 +6,8 @@ from generate_data.base_data import get_base_variables
 from equations.down_and_out_call_Brown import price_down_and_out_call_brown
 import time
 
+
+
 def main(): 
     # Initial values
     h_values = range(99, 100)
