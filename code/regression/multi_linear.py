@@ -4,11 +4,11 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
 # Load your data
-data = pd.read_csv('Beta_values.csv')
+data = pd.read_csv('sample_data.csv')
 
 # Prepare the data
-X = data[['T', 'sigma', 'H']]
-y = data['Best Beta']
+X = data[['T', 'sigma', 'H', 'm']]
+y = data['best_beta']
 
 # Since we're going to use a linear model, we need to transform the target variable
 # taking the natural log of y

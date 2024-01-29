@@ -8,31 +8,24 @@ from generate_data.base_data import get_base_variables
 
 def main():
     # Get the base variables
-    m, r, _, _, S0, K, _, beta, _, q = get_base_variables()
+    m, r, _, _, S0, K, _, _, _, q = get_base_variables()
 
     # Read the data
     df = pd.read_csv('data.csv')
 
-    # Generate all unique combinations of H, Sigma, and T
-    combinations = [(H, sigma, T) for H in df['H'].unique() 
-                                    for sigma in df['sigma'].unique() 
-                                    for T in df['T'].unique()]
+    # Function to process each row of the dataframe
+    def process_row(row):
+        # Find the best beta for the given row's parameters and exact price
+        best_beta, min_error = find_optimal_beta(S0, K, r, q, row['sigma'], m, row['H'], row['T'], row['price_mc'])
+        return {'T': row['T'], 'sigma': row['sigma'], 'H': row['H'], 'Best Beta': best_beta, 'Average Error': min_error}
 
-    # Function to process each combination
-    def process_combination(H, sigma, T):
-        df_subset = df[(df['H'] == H) & (df['sigma'] == sigma) & (df['T'] == T)]
-        if not df_subset.empty:
-            return find_optimal_beta(df_subset, S0, K, r, q, sigma, m, H)
-        return None
+    # Parallel computation for each row in the dataframe
+    results = Parallel(n_jobs=-1)(delayed(process_row)(row) for _, row in df.iterrows())
 
-    # Parallel computation for each combination
-    results = Parallel(n_jobs=-1)(delayed(process_combination)(H, sigma, T) for H, sigma, T in combinations)
+    # Convert results to a DataFrame
+    results_df = pd.DataFrame(results)
 
-    # Filter out None results and convert to a DataFrame
-    results = [result for result in results if result is not None]
-    results_df = pd.DataFrame(results, columns=['H', 'Beta', 'Error'])
-
-    # Save to CSV
+    # Save to CSV in the specified format
     results_df.to_csv('best_beta.csv', index=False)
 
     print("Optimal betas calculation completed. Results saved to 'best_beta.csv'.")

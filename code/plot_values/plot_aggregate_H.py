@@ -14,7 +14,7 @@ m, r, T, sigma, S0, K, trading_days, beta_default, H_init, q = get_base_variable
 
 # Iterations for the test case
 t_values = np.arange(0.2, 5.1, 0.1)
-h_values = range(90, 91)
+h_values = range(90, 99)
 sigma = 0.3
 
 # The data file contains the exact values

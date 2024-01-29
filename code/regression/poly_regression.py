@@ -7,11 +7,11 @@ from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 
 # Load your data
-data = pd.read_csv('Beta_values.csv')
+data = pd.read_csv('sample_data.csv')
 
 # Preprocess and prepare the data
-X = data[['T', 'sigma', 'H']]
-y = data['Best Beta']
+X = data[['T', 'sigma', 'H', 'm']]
+y = data['best_beta']
 
 # Generating polynomial features
 degree = 2  # You can adjust the degree of the polynomial
