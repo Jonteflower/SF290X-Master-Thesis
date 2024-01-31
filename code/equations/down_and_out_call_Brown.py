@@ -20,13 +20,13 @@ def simulate_path_segment(m, r, T, sigma, S0, K, H, q, segment_n_paths, dt):
     return payoffs
 
 
-def price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n=10**7, confidence_level=0.95, n_jobs=-1):
+def price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n=10**7, n_jobs=8):
     n_paths = n
     n_steps = m
     dt = T / n_steps
 
     # Adjust the number of jobs and paths per job
-    n_jobs = 8
+    confidence_level=0.95
     paths_per_job = max(1, n_paths // n_jobs)  # Ensure at least one path per job
 
     # Adjust n_jobs if n_paths is smaller

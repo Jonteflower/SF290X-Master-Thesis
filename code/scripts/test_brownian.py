@@ -6,12 +6,10 @@ from generate_data.base_data import get_base_variables
 from equations.down_and_out_call_Brown import price_down_and_out_call_brown
 import time
 
-
-
 def main(): 
     # Initial values
-    h_values = range(99, 100)
-    n = 2 * 10**7
+    h_values = range(85, 86)
+    n = 3.2* 10**7
     
     # Get base variables
     m, r, T, sigma, S0, K, trading_days, beta, H, q = get_base_variables()
@@ -27,7 +25,7 @@ def main():
         price, sem, conf_interval = price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n)
         lower_bound = price - conf_interval
         upper_bound = price + conf_interval
-        print("Barrier H:", H, "Price:", round(price, 3), "SEM:", round(sem, 4), "Confidence Interval:", f"({round(lower_bound, 3)}, {round(upper_bound, 3)})")
+        print("Barrier H:", H, "Price:", round(price, 3), "SEM:", round(sem, 3), "Confidence Interval:", f"({round(lower_bound, 3)}, {round(upper_bound, 3)})")
     
     # Print results
     time_per_iteration = round((time.time() - start) / len(h_values), 1)
