@@ -15,7 +15,7 @@ data = {
     "H": 85,
     "q": 0,
     "confidence_level": 0.95,
-    "n_paths": 4.1*10**7
+    "n_paths": 1*10**7
 }
 
 start = time.time()

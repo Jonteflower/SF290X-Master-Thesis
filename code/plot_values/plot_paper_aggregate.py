@@ -30,7 +30,7 @@ for T in T_values:
         # Group by H_percent and calculate the mean of best_beta
         avg_beta = df_filtered.groupby('H_percent')['best_beta'].mean().reset_index()
         
-        # Plot the line for the current T and sigma
+        # Plot the non exponential lines for this 
         #plt.plot(avg_beta['H_percent'], avg_beta['best_beta'], label=f'Average Optimal Beta T={T:.1f} Sigma={sigma}')
         
         # Fit the data to a polynomial
@@ -42,7 +42,7 @@ for T in T_values:
         poly_fit_values = poly_fit_function(avg_beta['H_percent'])
         
         # Plot the polynomial fit line
-        plt.plot(avg_beta['H_percent'], poly_fit_values, label=f'Polyfit T={T:.1f} Sigma={sigma}', linestyle='--')
+        plt.plot(avg_beta['H_percent'], poly_fit_values, label=f'Polyfit T={T:.1f} Sigma={sigma} Sum={round(np.sqrt(T)*sigma, 2)}', linestyle='--')
         
 # Horizontal line for Beta = 0.5826
 plt.axhline(y=0.5826, color='gray', linestyle='--', label='Baseline Beta')

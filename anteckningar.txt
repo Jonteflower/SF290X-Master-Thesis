@@ -1,3 +1,7 @@
 Steg 1 hitta vart Beta börjar öka som functkion av H och T
 Steg 2 hitta lutningen på Betas ökningen eller functionen av den.
 Använd steg 1 som ett sätt att förstå när den nya ekvationen ska användas istället för Beta=konstant
+
+
+######################
+Det spelar ingen roll of det är T eller Sigma som påverkar utan det är produkten av dessa som är relevant

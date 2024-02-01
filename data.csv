@@ -1,4 +1,4 @@
-S0,K,r,m,T,H,sigma,trading_days,price_mc,price,price_adj
+S0,K,r,m,T,H,sigma,trading_days,price_iter,price,price_adj
 100,100,0.1,50,0.2,90,0.2,250,4.59,4.579,4.591
 100,100,0.1,50,0.2,90,0.25,250,5.382,5.332,5.383
 100,100,0.1,50,0.2,90,0.3,250,6.098,5.977,6.098
