@@ -22,7 +22,7 @@ def compute_best_beta(row):
         price_iter = eval(price_iter)[0]
     _, H_adj_up = adjusted_barrier(T, H, sigma, m, beta=0.5826)  # Assuming a default beta value to get H_adj_up
     best_beta_value, _ = find_optimal_beta(S0, K, r, q, sigma, m, H, T, price_iter)
-    print(best_beta_value)
+        
     return best_beta_value
 
 # Apply the function to each row to compute the best beta
@@ -31,6 +31,6 @@ df['best_beta'] = df.apply(compute_best_beta, axis=1)
 
 # Save the updated DataFrame to a new CSV file
 new_csv_file_path = 'updated_data_with_best_beta.csv'  # Update this to your desired new CSV file path
-df.to_csv(new_csv_file_path, index=False)
+#df.to_csv(new_csv_file_path, index=False)
 
 print(f"Updated data saved to '{new_csv_file_path}'.")

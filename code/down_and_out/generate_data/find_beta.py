@@ -4,7 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 from equations.adjusted_barrier import adjusted_barrier
 from equations.down_and_out_call_exact import down_and_call_book
-
+import time
 
 # Function to calculate percentage error
 def percentage_error(price_adj, exact_price):
@@ -32,9 +32,11 @@ def find_optimal_beta(S0, K, r, q, sigma, m, H, T, exact_price ):
 
     return round(best_beta, 5), min_error
 
+
 """
 start = time.time()
 best_beta = find_optimal_beta(100, 100, 0.1, 0, 0.3, 50, 85, 0.2, 6.322)
 print(best_beta)
 print(f"{time.time()-start} seconds")
 """
+

@@ -5,11 +5,12 @@ import pandas as pd
 from generate_data.base_data import get_base_variables
 from equations.up_and_out_call_Brown import price_up_and_out_call_brown
 import time
+import numpy as np
 
 def main(): 
     # Initial values
-    h_values = range(85, 86)
-    n = 3.2* 10**7
+    h_values = np.arange(111, 113)
+    n = 4 * 10**7
     
     # Get base variables
     m, r, T, sigma, S0, K, trading_days, beta, H, q = get_base_variables()

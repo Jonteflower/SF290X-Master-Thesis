@@ -8,8 +8,8 @@ df_combined = pd.read_csv('data_up_out_beta.csv')
 df_combined = abs(df_combined)
 
 # Define the T and sigma values we are interested in
-T_values = [1, 1.8,2.2, 5]
-sigma_values = [0.2, 0.3, 0.5, 0.6]
+T_values = [1,1.8, 3, 3.4]
+sigma_values = [0.3 ]
 
 # Initialize a figure with 1 row and 2 columns
 fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(20, 6))
@@ -27,10 +27,10 @@ def power_law(x, c, d):
 for sigma in sigma_values:
     # Aggregate data across T for the current sigma
     df_filtered_sigma = df_combined[df_combined['sigma'] == sigma]
-    avg_beta_sigma = df_filtered_sigma.groupby('H_percent')['best_beta'].mean().reset_index()
+    avg_beta_sigma_sorted = df_filtered_sigma.groupby('H_percent')['best_beta'].mean().reset_index()
     
     # Sort the aggregated data in descending order of H_percent before plotting
-    avg_beta_sigma_sorted = avg_beta_sigma.sort_values('H_percent', ascending=False)
+    #avg_beta_sigma_sorted = avg_beta_sigma.sort_values('H_percent', ascending=False)
     
     # Fit the data to a polynomial for aggregated visualization
     poly_degree_sigma = 3

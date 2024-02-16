@@ -5,3 +5,10 @@ Använd steg 1 som ett sätt att förstå när den nya ekvationen ska användas 
 
 ######################
 Det spelar ingen roll of det är T eller Sigma som påverkar utan det är produkten av dessa som är relevant
+
+
+#################
+Up and Out behöver ingen barrier correction fix utan beta=0.5826 fungerar för alla fall
+
+#################
+Up and In oklart

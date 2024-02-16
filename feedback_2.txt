@@ -1,0 +1,8 @@
+Plot a wave function in 3D
+
+Plot the log(H/S0)
+kommer ifrån --> log(H/S0)/(sigma*sqrt(T))
+
+################
+Increase funktionen går åt motsatt håll från den vanliga funktionen 
+DVS log(H/S0) går ner när error går upp och vice versa 

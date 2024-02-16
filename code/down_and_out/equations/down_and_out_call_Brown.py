@@ -1,11 +1,11 @@
 import numpy as np
 import time
 from scipy import stats
+from joblib import Parallel, delayed
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from generate_data.base_data import get_base_variables, get_exact_values
-from joblib import Parallel, delayed
 
 def simulate_path_segment(m, r, T, sigma, S0, K, H, q, segment_n_paths, dt):
     dW = np.sqrt(dt) * np.random.randn(m, segment_n_paths)
@@ -27,7 +27,7 @@ def price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n=10**7, n_jobs=8
 
     # Adjust the number of jobs and paths per job
     confidence_level=0.95
-    paths_per_job = max(1, n_paths // n_jobs)  # Ensure at least one path per job
+    paths_per_job = max(1, round(n_paths // n_jobs))  # Ensure at least one path per job
 
     # Adjust n_jobs if n_paths is smaller
     n_jobs = min(n_jobs, n_paths)
@@ -51,4 +51,22 @@ def price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n=10**7, n_jobs=8
     confidence_interval = z_score * sem
 
     return option_price, sem, confidence_interval
-    
+
+"""
+# Example usage:
+S0 = 100  # Current stock price
+K = 100   # Strike price
+T = 0.2   # Time to maturity in years
+r = 0.1   # Risk-free interest rate
+q = 0.0   # Dividend yield
+sigma = 0.3  # Volatility
+H = 85   # Barrier
+m = 50
+n = 2*10**7
+
+# Calculate up-and-out call price
+start = time.time()
+price = price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q,n)
+print("The process took, ", round(time.time()-start), " seconds") 
+print(price[0])
+"""

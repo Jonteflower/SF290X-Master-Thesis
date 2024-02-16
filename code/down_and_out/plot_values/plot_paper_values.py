@@ -7,8 +7,8 @@ from scipy.optimize import curve_fit
 df_combined = pd.read_csv('data.csv')  
 
 # Define the T and sigma values we are interested in
-T_values = [1, 2, 5]
-sigma_values = [0.2, 0.3, 0.5]
+T_values = [1, 2,2.5, 5]
+sigma_values = [0.2, 0.3,0.4, 0.5]
 
 # Initialize a figure with 1 row and 2 columns
 fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(20, 6))
@@ -26,7 +26,11 @@ def power_law(x, c, d):
 for sigma in sigma_values:
     # Aggregate data across T for the current sigma
     df_filtered_sigma = df_combined[df_combined['sigma'] == sigma]
-    df_filtered_sigma['H_percent'] = ((df_filtered_sigma['S0'] - df_filtered_sigma['H']) / df_filtered_sigma['S0']) * 100
+    
+    ### Old version
+    #df_filtered_sigma['H_percent'] = ((df_filtered_sigma['S0'] - df_filtered_sigma['H']) / df_filtered_sigma['S0']) * 100
+    df_filtered_sigma['H_percent'] = abs(np.log(df_filtered_sigma['H']/df_filtered_sigma['S0']) )
+
     avg_beta_sigma = df_filtered_sigma.groupby('H_percent')['best_beta'].mean().reset_index()
     
     # Sort the aggregated data in descending order of H_percent before plotting
@@ -51,7 +55,8 @@ for T in T_values:
     for sigma in sigma_values:
         # Filter the DataFrame for the current T and sigma
         df_filtered = df_combined[(df_combined['T'] == T) & (df_combined['sigma'] == sigma)]
-        df_filtered['H_percent'] = ((df_filtered['S0'] - df_filtered['H']) / df_filtered['S0']) * 100
+        #df_filtered_sigma['H_percent'] = ((df_filtered_sigma['S0'] - df_filtered_sigma['H']) / df_filtered_sigma['S0']) * 100
+        df_filtered_sigma['H_percent'] = abs(np.log(df_filtered_sigma['H']/df_filtered_sigma['S0']) )        
         avg_beta = df_filtered.groupby('H_percent')['best_beta'].mean().reset_index()
         
         # Sort each individual data set in descending order of H_percent before plotting

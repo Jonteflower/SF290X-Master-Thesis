@@ -54,7 +54,6 @@ def plot_aggregated_errors(csv_file_path):
     plt.legend(title='Method')
     plt.gca().invert_xaxis()  # Invert the x-axis to have the largest H_percent start on the left
     plt.show()
-    
 
 # Assuming 'paper_values.csv' is your data file
 plot_aggregated_errors('data.csv')

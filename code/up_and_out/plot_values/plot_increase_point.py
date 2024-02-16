@@ -45,6 +45,7 @@ def test():
     plt.title('H Percent as a Function of Product (Sigma*sqrt(T)) with Fitted Line')
     plt.xlabel('Product (Sigma*sqrt(T))')
     plt.ylabel('H Percent')
+    plt.yscale('log')  # Set the Y-axis to logarithmic scale
     plt.legend()
     plt.grid(True)
     plt.show()

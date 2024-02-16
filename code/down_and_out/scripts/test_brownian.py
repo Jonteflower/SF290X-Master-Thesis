@@ -9,7 +9,7 @@ import time
 def main(): 
     # Initial values
     h_values = range(85, 86)
-    n = 3.2* 10**7
+    n = 2 * 10**7
     
     # Get base variables
     m, r, T, sigma, S0, K, trading_days, beta, H, q = get_base_variables()

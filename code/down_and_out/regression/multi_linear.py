@@ -4,7 +4,7 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
 # Load your data
-data = pd.read_csv('sample_data.csv')
+data = pd.read_csv('data.csv')
 
 # Prepare the data
 X = data[['T', 'sigma', 'H', 'm']]

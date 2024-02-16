@@ -13,28 +13,29 @@ import time
 def compute_prices(S0, K, r, m, T, H, sigma, trading_days, n):
     H_adj_down, H_adj_up = adjusted_barrier(T, H, sigma, m, beta)
     price_iter = price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n)
-    price = down_and_call_book(S0, K, T, r, q, sigma, H, H, H)
-    price_adj = down_and_call_book(S0, K, T, r, q, sigma, H, H_adj_down, H_adj_up)
-    error_percent = ((price_iter - price_adj)/price_iter)*100
+    price = down_and_call_book(S0, K, T, r, q, sigma,H, H_adj_down, H_adj_up)
+    price_adj = down_and_call_book(S0, K, T, r, q, sigma,H, H_adj_down, H_adj_up)
     H_percent = ((S0 - H)/S0)*100
+    H_log = np.log(H/S0)
     
-    return [S0, K, r, m, T, H, sigma, trading_days, price_iter, price, price_adj, error_percent, H_percent]
+    #Best beta value
+    best_beta = find_optimal_beta(S0, K, r, q, sigma, m, H, T, price_iter[0])
+    return [S0, K, r, m, T, H, sigma, trading_days, price_iter[0], price, price_adj, H_percent, H_log, best_beta[0]]
 
 # Values
-S0 = 100
-K = 100 
+S0 = 300
+K = 300 
 q = 0
 m = 50
 trading_days = 250
-h_min = round(0.9*S0)
-h_max = S0
+h_min = 0.85*S0
+h_max = S0-1
 beta = 0.5826
-t_values = np.arange(0.2, 5.1, 0.1)
-sigma_values = np.arange(0.2, 0.61, 0.05)
-h_values = range(h_min, h_max)
+t_values = [4,5]
+sigma_values = [0.3, 0.4, 0.5]
+h_values = np.arange(h_min, h_max)
 r_values = [0.1]
-
-n = 3*10**7
+n = 1.4*10**7
 
 # Calculate total iterations
 total_iterations = len(r_values) * len(h_values) * len(t_values) * len(sigma_values)
@@ -59,15 +60,15 @@ for r in r_values:
 print()
 
 # Create DataFrame from results
-df = pd.DataFrame(results, columns=['S0', 'K', 'r', 'm', 'T', 'H', 'sigma', 'trading_days', 'price_iter', 'price', 'price_adj','error_percent', 'H_percent' ])
+df = pd.DataFrame(results, columns=['S0', 'K', 'r', 'm', 'T', 'H', 'sigma', 'trading_days', 'price_iter', 'price', 'price_adj', 'H_percent', 'H_log',  'best_beta'])
 
 # Rounding the values to three decimal places
 df = df.round(4)
 
 # Save the DataFrame to a CSV file
-df.to_csv('accurate_data.csv', index=False)
+df.to_csv('paper_values_300.csv', index=False)
 
 # Print elapsed time
 elapsed_time = time.time() - start_time
 print(f"Simulation completed in {elapsed_time:.2f} seconds")
-print("Simulation data saved to 'data_K200s.csv'")
+print("Simulation data saved to 'paper_values_300.csv'")

@@ -10,25 +10,27 @@ def fitted_beta(H):
 
 def regression_beta(T, sigma, H, S0, data):
     H_percent = ((S0-H)/S0)*100
+    H_percent = (np.log(H/S0))
     prod = sigma*np.sqrt(T)
     
     ### Todo find a generalised function for this 
     h_increase = find_strictly_increase(data, T, sigma)
-    
     beta = 0.5826
     
     #print("H",H, "S0 ", S0, "h_increase ", h_increase)
 
     # From regresion_exp function
     if  H_percent <= h_increase:
-        ### For data.csv
-        beta = 0.6467*np.exp(-0.0171*H_percent+0.0950*prod)
         
+        ### For data.csv best one so far with H_percent
+        beta = 0.6467*np.exp(-0.0171*H_percent+0.0950*prod)
+        #beta = 0.6281 * np.exp(-0.8028 * H_percent + 0.0601 * prod)
+        
+        ### Imporve the final step
         #if H_percent < 2:
             #beta = 0.6467*np.exp(-0.0171*H_percent+0.15*prod)
- 
+            
         #beta = 0.5826
-        
         #print("Chaning to new beta",beta, "For T ", T, "For Sigma ", sigma, "H_percent ", H_percent)
 
     return beta

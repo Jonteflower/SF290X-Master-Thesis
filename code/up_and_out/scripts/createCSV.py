@@ -18,7 +18,6 @@ def compute_prices(S0, K, r, m, T, H, sigma, trading_days, n):
     H_percent = ((S0 - H)/S0)*100
     #Best beta value
     best_beta = find_optimal_beta(S0, K, r, q, sigma, m, H, T, price_iter[0])
-    print(best_beta)
     return [S0, K, r, m, T, H, sigma, trading_days, price_iter, price, price_adj, H_percent, best_beta[0]]
 
 # Values
@@ -27,14 +26,14 @@ K = 100
 q = 0
 m = 50
 trading_days = 250
-h_min = 115
+h_min = 111
 h_max = 155
 beta = 0.5826
 t_values = np.arange(0.2, 5.3, 0.4)
 sigma_values = np.arange(0.2, 0.61, 0.1)
 h_values = range(h_min, h_max)
 r_values = [0.1]
-n = 1*10**7
+n = 4*10**3
 
 # Calculate total iterations
 total_iterations = len(r_values) * len(h_values) * len(t_values) * len(sigma_values)
@@ -59,7 +58,7 @@ for r in r_values:
 print()
 
 # Create DataFrame from results
-df = pd.DataFrame(results, columns=['S0', 'K', 'r', 'm', 'T', 'H', 'sigma', 'trading_days', 'price_iter', 'price', 'price_adj', 'H_percent'])
+df = pd.DataFrame(results, columns=['S0', 'K', 'r', 'm', 'T', 'H', 'sigma', 'trading_days', 'price_iter', 'price', 'price_adj', 'H_percent', 'best_beta'])
 
 # Rounding the values to three decimal places
 df = df.round(4)

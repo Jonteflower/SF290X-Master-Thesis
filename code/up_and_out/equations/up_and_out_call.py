@@ -16,6 +16,9 @@ def up_and_out_call(S0, K, T, r, q, sigma, H):
     x1 = np.log(S0/H) / (sigma * np.sqrt(T)) + lambda_ * sigma * np.sqrt(T)
     y1 = np.log(H/S0) / (sigma * np.sqrt(T)) + lambda_ * sigma * np.sqrt(T)
 
+    cui = 0
+    cuo = 0
+    
     # Check if barrier is greater than the strike price
     if H > K:
         cui = (
@@ -29,9 +32,11 @@ def up_and_out_call(S0, K, T, r, q, sigma, H):
         # When the barrier is less than or equal to the strike price,
         # the up-and-out call value is zero
         cuo = 0
+        cui = c
 
-    return cuo
+    return cui, cuo
     
+
 # Example usage:
 S0 = 110  # Current stock price
 K = 100   # Strike price
@@ -39,12 +44,13 @@ T = 0.2   # Time to maturity in years
 r = 0.1   # Risk-free interest rate
 q = 0.0   # Dividend yield
 sigma = 0.3  # Volatility
-H = 155    # Barrier
+H = 110    # Barrier
 m = 50
 delta_T = T / m
 beta = 0.5826
 # Calculate up-and-out call price
-#H_adjusted = H * np.exp( beta * sigma * np.sqrt(delta_T))
 
-#price = up_and_out_call(S0, K, T, r, q, sigma, H_adjusted)
-#print(price)
+H_adjusted = H * np.exp( beta * sigma * np.sqrt(delta_T))
+cui, cuo = up_and_out_call(S0, K, T, r, q, sigma, H_adjusted)
+#print(cui, cuo)
+
