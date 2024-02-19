@@ -7,9 +7,8 @@ import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import OLSInfluence
 
 # Load the CSV file
-df_combined = pd.read_csv('data.csv')
+df_combined = pd.read_csv('updated_accurate_values.csv')
 
-# Adjust the dataset based on your criteria
 # For simplicity, using the whole dataset as is, assuming necessary columns exist
 df_combined['Sigma_sqrt_T'] = df_combined['sigma'] * np.sqrt(df_combined['T'])
 

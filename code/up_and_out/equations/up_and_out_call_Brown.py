@@ -21,7 +21,7 @@ def simulate_path_segment(m, r, T, sigma, S0, K, H, q, segment_n_paths, dt):
     payoffs = np.where(S.any(axis=0) == 0, 0, payoffs)  # Check if the path has been knocked out
     return payoffs
 
-def price_up_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n=2*10**7, n_jobs=8):
+def price_up_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n, n_jobs=8):
     n_paths = n
     n_steps = m
     dt = T / n_steps
@@ -64,7 +64,8 @@ q = 0.0   # Dividend yield
 sigma = 0.4  # Volatility
 H = 111   # Barrier
 m = 50
+n = 10**7
 
 # Calculate up-and-out call price
-price = price_up_and_out_call_brown(m, r, T, sigma, S0, K, H, q)
+price = price_up_and_out_call_brown(m, r, T, sigma, S0, K, H, q,n)
 print(price)

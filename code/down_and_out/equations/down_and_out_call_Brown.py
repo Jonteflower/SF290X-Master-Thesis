@@ -52,7 +52,7 @@ def price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q, n=10**7, n_jobs=8
 
     return option_price, sem, confidence_interval
 
-"""
+
 # Example usage:
 S0 = 100  # Current stock price
 K = 100   # Strike price
@@ -62,11 +62,11 @@ q = 0.0   # Dividend yield
 sigma = 0.3  # Volatility
 H = 85   # Barrier
 m = 50
-n = 2*10**7
+n = 4.5*10**7
 
 # Calculate up-and-out call price
 start = time.time()
 price = price_down_and_out_call_brown(m, r, T, sigma, S0, K, H, q,n)
 print("The process took, ", round(time.time()-start), " seconds") 
-print(price[0])
-"""
+print(price)
+

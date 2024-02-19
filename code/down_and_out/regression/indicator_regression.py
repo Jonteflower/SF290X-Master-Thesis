@@ -10,7 +10,7 @@ from generate_data.find_strictly_increase import find_strictly_increase
 from scipy.optimize import curve_fit
 from sklearn.metrics import mean_squared_error, r2_score
 
-csvFilePath = 'paper_values.csv'
+csvFilePath = 'acc_data.csv'
 #csvFilePath = 'data.csv'
 
 # Define your model function here; this is an example of a quadratic function.
@@ -37,8 +37,8 @@ def find_strictly_decrease(data, T_val, sigma_val):
     return 0
 
 def test():
-    data = pd.read_csv(csvFilePath)
-    filtered_data = data[(data['K'] == 300)]
+    filtered_data = pd.read_csv(csvFilePath)
+    #filtered_data = data[(data['K'] == 300)]
     T_range = np.arange(0.2, 5.1, 0.05)
     sigma_range = np.arange(0.2, 0.6, 0.05)
     

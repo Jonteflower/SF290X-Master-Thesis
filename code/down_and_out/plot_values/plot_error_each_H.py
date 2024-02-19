@@ -31,7 +31,7 @@ def generate_data(beta, type):
         for H in h_values:
             
             if type == "custom":
-                H_adj_down, H_adj_up = adjusted_barrier_custom(T, H, S0, K, sigma, m, beta)
+                H_adj_down, H_adj_up = adjusted_barrier_custom(T, H, S0, K, sigma, m, beta, df)
             else:
                 H_adj_down, H_adj_up = adjusted_barrier(T, H, sigma, m, beta)
 

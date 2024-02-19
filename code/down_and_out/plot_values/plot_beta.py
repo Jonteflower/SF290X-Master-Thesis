@@ -1,52 +1,80 @@
-import sys
-import os
-# Adjust the system path to include the parent directory
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
-from generate_data.base_data import get_beta_values
+import numpy as np
+from scipy.optimize import curve_fit
 
-# Get the beta values for different sigma values
-beta_values = get_beta_values()
+# Load the CSV file
+df_combined = pd.read_csv('data.csv')  
 
-# Initialize subplots
-fig, axs = plt.subplots(1, 2, figsize=(20, 6))
+# Define the T and sigma values we are interested in
+T_values = [1, 2,2.5, 5]
+sigma_values = [0.2, 0.3,0.4, 0.5]
 
-# Iterate over each sigma's beta values for line plot
-for sigma, sigma_beta_values in beta_values.items():
-    H_values = np.array(list(sigma_beta_values.keys()))
-    optimal_betas = np.array(list(sigma_beta_values.values()))
+# Initialize a figure with 1 row and 2 columns
+fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(20, 6))
+fig.suptitle('Comparison of Average Optimal Beta vs Percentage Difference')
 
-    axs[0].plot(H_values, optimal_betas, label=f'Sigma={sigma}')
+# Exponential growth function
+def exponential_growth(x, a, b):
+    return a * np.exp(b * x)
 
-# Iterate over each sigma's beta values for scatter plot with polynomial fit
-for sigma, sigma_beta_values in beta_values.items():
-    H_values = np.array(list(sigma_beta_values.keys()))
-    optimal_betas = np.array(list(sigma_beta_values.values()))
+# Power-law relationship
+def power_law(x, c, d):
+    return c * np.pow(x, d)
 
-    # Perform polynomial fitting with a degree of 2 (quadratic)
-    coefficients = np.polyfit(H_values, optimal_betas, 2)
-    p = np.poly1d(coefficients)
+# Plot aggregated data for each sigma on the right subplot (ax2)
+for sigma in sigma_values:
+    # Aggregate data across T for the current sigma
+    df_filtered_sigma = df_combined[df_combined['sigma'] == sigma]
+    
+    ### Old version
+    #df_filtered_sigma['H_percent'] = ((df_filtered_sigma['S0'] - df_filtered_sigma['H']) / df_filtered_sigma['S0']) * 100
+    df_filtered_sigma['H_percent'] = abs(np.log(df_filtered_sigma['H']/df_filtered_sigma['S0']) )
 
-    # Generate a range of H values for plotting the fit
-    H_fit = np.linspace(min(H_values), max(H_values), 100)
-    beta_fit = p(H_fit)
+    avg_beta_sigma = df_filtered_sigma.groupby('H_percent')['best_beta'].mean().reset_index()
+    
+    # Sort the aggregated data in descending order of H_percent before plotting
+    avg_beta_sigma_sorted = avg_beta_sigma.sort_values('H_percent', ascending=False)
+    
+    # Fit the data to a polynomial for aggregated visualization
+    poly_degree_sigma = 3
+    poly_coefficients_sigma = np.polyfit(avg_beta_sigma_sorted['H_percent'], avg_beta_sigma_sorted['best_beta'], poly_degree_sigma)
+    poly_fit_function_sigma = np.poly1d(poly_coefficients_sigma)
+    poly_fit_values_sigma = poly_fit_function_sigma(avg_beta_sigma_sorted['H_percent'])
+    
+    # Plot the polynomial fit line for the aggregated data
+    ax2.plot(avg_beta_sigma_sorted['H_percent'], poly_fit_values_sigma, label=f'Aggregated Sigma={sigma}', linestyle='--')
+    ax2.set_xlabel('Percentage Difference (S0 - H) / S0')
+    ax2.set_ylabel('Average Optimal Beta')
+    ax2.legend()
+    ax2.grid(True)
+    ax2.set_xlim(max(avg_beta_sigma_sorted['H_percent']), min(avg_beta_sigma_sorted['H_percent']))
 
-    axs[1].scatter(H_values, optimal_betas, label=f'Sigma={sigma} Data')
-    axs[1].plot(H_fit, beta_fit, label=f'Sigma={sigma} Fit: {p}')
-
-# Setting labels, titles, and legends
-axs[0].set_xlabel('H Values')
-axs[0].set_ylabel('Optimal Beta Values')
-axs[0].set_title('Line Plot of Beta Values for Different Sigmas')
-axs[0].legend()
-axs[0].grid(True)
-
-axs[1].set_xlabel('H Values')
-axs[1].set_ylabel('Optimal Beta Values')
-axs[1].set_title('Scatter Plot with Polynomial Fit for Different Sigmas')
-axs[1].legend()
-axs[1].grid(True)
+# Plot individual data for each T and sigma combination on the left subplot (ax1)
+for T in T_values:
+    for sigma in sigma_values:
+        # Filter the DataFrame for the current T and sigma
+        df_filtered = df_combined[(df_combined['T'] == T) & (df_combined['sigma'] == sigma)]
+        #df_filtered_sigma['H_percent'] = ((df_filtered_sigma['S0'] - df_filtered_sigma['H']) / df_filtered_sigma['S0']) * 100
+        df_filtered_sigma['H_percent'] = abs(np.log(df_filtered_sigma['H']/df_filtered_sigma['S0']) )        
+        avg_beta = df_filtered.groupby('H_percent')['best_beta'].mean().reset_index()
+        
+        # Sort each individual data set in descending order of H_percent before plotting
+        avg_beta_sorted = avg_beta.sort_values('H_percent', ascending=False)
+        
+        # Fit the data to a polynomial
+        poly_degree = 3
+        poly_coefficients = np.polyfit(avg_beta_sorted['H_percent'], avg_beta_sorted['best_beta'], poly_degree)
+        poly_fit_function = np.poly1d(poly_coefficients)
+        poly_fit_values = poly_fit_function(avg_beta_sorted['H_percent'])
+        
+        # Plot the polynomial fit line for each combination
+        ax1.plot(avg_beta_sorted['H_percent'], poly_fit_values, label=f'T={T} Sigma={sigma}, σ*sqrt(T)={round(sigma*np.sqrt(T),2)} ', linestyle='--')
+        ax1.set_xlabel('Percentage Difference (S0 - H) / S0')
+        ax1.set_ylabel('Average Optimal Beta')
+        ax1.legend()
+        ax1.grid(True)
+        ax1.set_xlim(max(avg_beta_sorted['H_percent']), min(avg_beta_sorted['H_percent']))
 
 plt.tight_layout()
 plt.show()
