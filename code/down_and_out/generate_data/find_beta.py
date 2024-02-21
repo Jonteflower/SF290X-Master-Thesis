@@ -30,7 +30,7 @@ def find_optimal_beta(S0, K, r, q, sigma, m, H, T, exact_price ):
                 min_error = error
                 best_beta = beta_candidate
 
-    return round(best_beta, 5), min_error
+    return round(best_beta, 8), min_error
 
 
 """

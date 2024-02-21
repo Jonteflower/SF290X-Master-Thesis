@@ -8,7 +8,7 @@ from equations.down_and_out_call_exact import down_and_call_book
 from generate_data.find_beta import find_optimal_beta
 
 def main():
-    file_name = 'data.csv'
+    file_name = 'acc_data_2.csv'
     df = pd.read_csv(file_name)
 
     def process_row(row):
@@ -34,9 +34,17 @@ def main():
     df['H_log'] = np.abs(np.log(df['H'] / df['S0']))
     df['error_percent'] = np.abs((df['price_iter'] - df['price_adj']) / df['price_iter']) * 100
     df['Product'] = df['sigma'] * np.sqrt(df['T']/df['m'])
+    
+    df = df.round(6)
 
+    # Columns to drop
+    columns_to_drop = ['price_adj_custom', 'error', 'error_custom']
+
+    # Drop the specified columns
+    df_dropped = df.drop(columns=columns_to_drop, errors='ignore')
+    
     # Save the updated DataFrame
-    df.to_csv(file_name, index=False)
+    df_dropped.to_csv(file_name, index=False)
 
     print(f"DataFrame updated and saved to {file_name}.")
 
