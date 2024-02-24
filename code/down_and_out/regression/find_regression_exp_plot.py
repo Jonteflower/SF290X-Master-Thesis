@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 # Load the CSV file
-df_combined = pd.read_csv('data.csv')
+df_combined = pd.read_csv('acc_data_3.csv')
 
 # Define the exponential model for curve fitting
 def exponential_model(X, a, b1, b2):

@@ -8,7 +8,7 @@ from equations.down_and_out_call_exact import down_and_call_book
 from generate_data.find_beta import find_optimal_beta
 
 def main():
-    file_name = 'acc_data_2.csv'
+    file_name = 'acc_data_3.csv'
     df = pd.read_csv(file_name)
 
     def process_row(row):
@@ -33,9 +33,9 @@ def main():
     # Additional calculations if needed
     df['H_log'] = np.abs(np.log(df['H'] / df['S0']))
     df['error_percent'] = np.abs((df['price_iter'] - df['price_adj']) / df['price_iter']) * 100
-    df['Product'] = df['sigma'] * np.sqrt(df['T']/df['m'])
+    df['Product'] = df['sigma'] * np.sqrt(df['T'])
     
-    df = df.round(6)
+    #df = df.round(6)
 
     # Columns to drop
     columns_to_drop = ['price_adj_custom', 'error', 'error_custom']

@@ -12,3 +12,26 @@ Up and Out behöver ingen barrier correction fix utan beta=0.5826 fungerar för 
 
 #################
 Up and In oklart
+
+
+###############
+Kontrollera om det är sigma*sqrt(T/m) eller bara räcker med sigma*sqrt(T) dvs utan m
+
+
+################
+Beta går mot 4 värden
+0.5889 -> 0.611 -> 0.6889 -> 0.711
+Med en centrering runt 0.6 och 0.7 ges följande med gör accuracy
+0.5826 -> 0.6174 -> 0.6826 -> 0.7174
+
+Med låga värden på Sigma*Sqrt(T) stannar värdet på beta vid 0.6826, denna threshold behöver tas fram
+Intressant kombo att plotta som visar denna övergång där sigma*sqrt(T) < 0.2 ger detta 
+
+sigma1 = 0.2
+t1 = 0.8
+
+sigma2 = 0.55
+t2 = 0.2
+
+sigma3 = 0.3
+t3 = 0.8
