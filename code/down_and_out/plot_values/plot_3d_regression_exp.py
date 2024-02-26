@@ -15,7 +15,7 @@ def exponential_model(x, a, b1, b2):
     return a * np.exp(b1 * x[0] + b2 * x[1])
 
 # Assuming df is your DataFrame and it is already loaded with 'H_log', 'Product', and 'best_beta' columns
-df = pd.read_csv('acc_data.csv')
+df = pd.read_csv('acc_data_3.csv')
 
 # Prepare the data for fitting
 X = np.vstack((df['H_log'], df['Product']))  # Stack 'H_log' and 'Product' for curve fitting
