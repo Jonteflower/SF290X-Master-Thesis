@@ -58,7 +58,7 @@ def regression_beta_engineer(T, sigma, H, S0):
 
 def regression_beta_engineer(T, sigma, H, S0):
     beta_start = 0.5826
-    beta_end = 0.72
+    beta_end = 0.7174
     Sigma_sqrt_T = sigma * np.sqrt(T)
     H_log_start =  -(7.3896e-02)*Sigma_sqrt_T**2 + (2.2475e-01)*Sigma_sqrt_T + -5.4974e-03
     H_start_increase = round(S0 * np.exp(-H_log_start))  # Determine the start of increase
@@ -106,7 +106,7 @@ for T, sigma in combinations:
 # Add labels and title
 plt.xlabel('H')
 plt.ylabel('best_beta')
-plt.title('Actual vs. Estimated Best Beta for Different Versions')
+plt.title('Actual Best Beta vs general Equation for Best Beta')
 plt.legend()
 
 # Show the plot

@@ -4,11 +4,11 @@ import numpy as np
 from scipy.optimize import curve_fit
 
 # Load the CSV file
-df_combined = pd.read_csv('data.csv')  
+df_combined = pd.read_csv('acc_data_2.csv')  
 
 # Define the T and sigma values we are interested in
-T_values = [1, 2,2.5, 5]
-sigma_values = [0.2, 0.3,0.4, 0.5]
+T_values = [1, 2, 3]
+sigma_values = [0.2, 0.3, 0.3]
 
 # Initialize a figure with 1 row and 2 columns
 fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(20, 6))

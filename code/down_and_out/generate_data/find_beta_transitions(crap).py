@@ -21,6 +21,8 @@ def find_strictly_increase(data, T_val, sigma_val):
     return (0, 0)  # Return a tuple for consistency
 
 def compute_transitions_all(df, T, sigma):
+    
+    ##
     beta_values = [0.589, 0.611, 0.689, 0.711]
     transition_data = {'T': T, 'sigma': sigma, 'S0': df['S0'].max()}
     
