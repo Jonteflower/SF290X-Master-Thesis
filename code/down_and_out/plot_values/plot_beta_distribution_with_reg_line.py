@@ -9,21 +9,25 @@ from scipy import stats
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Sample DataFrame
-file = 'acc_data_3.csv'
+file = 'acc_data.csv'
 df = pd.read_csv(file)
 
 # Filter out best_beta < 0.55
 df_filtered = df[df['best_beta'] >= 0.55]
 x_axis_key = 'H'
 
-sigma1 = 0.3
-t1 = 1
+# Randomly select a combination from df_filtered
+sample1 = df_filtered.sample(1).iloc[0]
+sigma1 = sample1['sigma']
+t1 = sample1['T']
 
-sigma2 = 0.4
-t2 = 3.5
+sample2 = df_filtered.sample(1).iloc[0]
+sigma2 = sample2['sigma']
+t2 = sample2['T']
 
-sigma3 = 0.35
-t3 = 3
+sample3 = df_filtered.sample(1).iloc[0]
+sigma3 = sample3['sigma']
+t3 = sample3['T']
 
 ##### Regression line for Beta
 """
@@ -58,9 +62,16 @@ def regression_beta_engineer(T, sigma, H, S0):
 
 def regression_beta_engineer(T, sigma, H, S0):
     beta_start = 0.5826
-    beta_end = 0.7174
     Sigma_sqrt_T = sigma * np.sqrt(T)
-    H_log_start =  -(7.3896e-02)*Sigma_sqrt_T**2 + (2.2475e-01)*Sigma_sqrt_T + -5.4974e-03
+
+    #### TODO find this as a function of 
+    #beta_end = 0.7174 ### Make this a function of sigma*sqrt(T) maybe over m
+    beta_end = 0.71432 / (1 + np.exp(-4.5498*(Sigma_sqrt_T + 0.45534)))
+     
+    ### This is from the reg of increase point both Logistic and quadratic can be used
+    #H_log_start =  -(7.3896e-02)*Sigma_sqrt_T**2 + (2.2475e-01)*Sigma_sqrt_T + -5.4974e-03
+    H_log_start = 0.15609 / (1 + np.exp(-4.5799*(Sigma_sqrt_T - 0.4876)))
+    
     H_start_increase = round(S0 * np.exp(-H_log_start))  # Determine the start of increase
     H_end = S0 - 1
 
@@ -69,7 +80,6 @@ def regression_beta_engineer(T, sigma, H, S0):
 
     # If we've reached the start of the increase, switch to the polynomial curve
     if H >= H_start_increase:
-        # Coefficients for the polynomial, solved based on boundary conditions
         # These are placeholders and should be solved based on your specific conditions
         a = (beta_end - beta_start) / ((H_end - H_start_increase)**2)
         b = -2 * a * H_start_increase
@@ -81,7 +91,7 @@ def regression_beta_engineer(T, sigma, H, S0):
     return beta
 
 # Define the combinations for T and sigma
-combinations = [(1, 0.3), (3.5, 0.4), (3, 0.35)]
+combinations = [(t1, sigma1), (t2, sigma2), (t3, sigma3)]
 
 # Create the plot
 plt.figure(figsize=(10, 6))

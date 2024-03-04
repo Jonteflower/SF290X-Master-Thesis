@@ -13,7 +13,8 @@ def percentage_error(price_adj, exact_price):
 def find_optimal_beta(S0, K, r, q, sigma, m, H, T, exact_price ):
     min_error = float('inf')
     best_beta = 0
-    precision_levels=[0.001, 0.00001, 0.0000001, 0.00000001]
+    precision = 1/1000
+    precision_levels=[precision, precision/10, precision/100, precision/1000]
 
     for precision in precision_levels:
         start = best_beta - precision if best_beta != 0 else 0

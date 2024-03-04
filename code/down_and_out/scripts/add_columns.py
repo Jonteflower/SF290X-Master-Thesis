@@ -8,7 +8,7 @@ from equations.down_and_out_call_exact import down_and_call_book
 from generate_data.find_beta import find_optimal_beta
 
 def main():
-    file_name = 'acc_data_3.csv'
+    file_name = 'acc_data.csv'
     df = pd.read_csv(file_name)
 
     def process_row(row):
