@@ -10,22 +10,26 @@ import matplotlib.pyplot as plt
 from scipy import stats
 
 # Sample DataFrame
-file = 'acc_data_3.csv'
+file = 'acc_data_m.csv'
 df = pd.read_csv(file)
 
 # Filter out best_beta < 0.55
-df_filtered = df[df['best_beta'] >= 0.55]
+df_filtered = df[(df['best_beta'] >= 0.57) & (df['m'] == 25)]
 
 x_axis_key = 'H'
 
-sigma1 = 0.3
-t1 = 1
+# Randomly select a combination from df_filtered
+sample1 = df_filtered.sample(1).iloc[0]
+sigma1 = sample1['sigma']
+t1 = sample1['T']
 
-sigma2 = 0.4
-t2 = 3.5
+sample2 = df_filtered.sample(1).iloc[0]
+sigma2 = sample2['sigma']
+t2 = sample2['T']
 
-sigma3 = 0.35
-t3 = 3
+sample3 = df_filtered.sample(1).iloc[0]
+sigma3 = sample3['sigma']
+t3 = sample3['T']
 
 # Filter out different versions using variables
 df_t1_sigma1 = df_filtered[(df_filtered['T'] == t1) & (df_filtered['sigma'] == sigma1)]

@@ -35,3 +35,5 @@ t2 = 0.2
 
 sigma3 = 0.3
 t3 = 0.8
+
+############ I Glasserman 1996 står det mer om barrier corrections

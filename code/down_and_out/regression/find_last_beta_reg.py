@@ -37,7 +37,7 @@ for T in unique_Ts:
         subset_df = df[(df['T'] == T) & (df['sigma'] == sigma)]
         
         # Calculate the product of Sigma and sqrt(T)
-        x = sigma * np.sqrt(T)
+        x = sigma * np.sqrt(T/50)
         
         # Find the maximum value of 'best_beta' in this subset
         y = subset_df['best_beta'].max()

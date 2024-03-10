@@ -12,16 +12,24 @@ from equations.down_and_out_call_exact import down_and_call_book
 from equations.adjusted_barrier import adjusted_barrier, adjusted_barrier_custom
 from generate_data.base_data import get_base_variables
 
-# Base variables
-m, r, T, sigma, S0, K, trading_days, beta_default, H_init, q = get_base_variables()
+# The data file contains the exact values
+df = pd.read_csv('acc_data.csv')
+m = df.iloc[0]['m']
+S0 = df.iloc[0]['S0']
+K = df.iloc[0]['K']
+h_min = df['H'].min()
+h_max = df['H'].max()
+trading_days = 250
+q = 0
+r = 0.1
 
 # Iterations for the test case
-t_values = np.arange(0.2, 5.1, 0.1)
-h_values = range(90, 100)
-sigma2 = 0.4
+t_values = np.sort(df['T'].unique().tolist())
+h_values = np.sort(df['H'].unique().tolist())
 
-# The data file contains the exact values
-df = pd.read_csv('data.csv')
+# Sigma values
+sigma1 = 0.3
+sigma2 = 0.4
 
 def generate_data(beta, sigma, type):
     errors = {H: [] for H in h_values}
@@ -66,10 +74,6 @@ def plot_data_per_H(beta1, beta2, sigma1, sigma2, t_vals, errors_beta1, errors_b
 # Beta values
 beta1 = 0.5826
 beta2 = 0.5826
-
-# Sigma values
-sigma1 = sigma
-sigma2 = 0.4
 
 # Data generation for both Betas and Sigmas
 t_vals, errors_beta1 = generate_data(beta1, sigma1, "regular")

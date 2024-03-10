@@ -9,11 +9,11 @@ from scipy import stats
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Sample DataFrame
-file = 'acc_data.csv'
-df = pd.read_csv(file)
+df = pd.read_csv('acc_data_m.csv')
+m = 50
 
 # Filter out best_beta < 0.55
-df_filtered = df[df['best_beta'] >= 0.55]
+df_filtered = df[(df['best_beta'] >= 0.55) & (df['m'] == m)]
 x_axis_key = 'H'
 
 # Randomly select a combination from df_filtered
@@ -62,15 +62,16 @@ def regression_beta_engineer(T, sigma, H, S0):
 
 def regression_beta_engineer(T, sigma, H, S0):
     beta_start = 0.5826
-    Sigma_sqrt_T = sigma * np.sqrt(T)
+    Sigma_sqrt_T = sigma * np.sqrt(T / m)
 
     #### TODO find this as a function of 
     #beta_end = 0.7174 ### Make this a function of sigma*sqrt(T) maybe over m
-    beta_end = 0.71432 / (1 + np.exp(-4.5498*(Sigma_sqrt_T + 0.45534)))
+    beta_end =  7.1432e-01 / (1 + np.exp(-3.2172e+01*(Sigma_sqrt_T + 6.4396e-02)))
      
     ### This is from the reg of increase point both Logistic and quadratic can be used
     #H_log_start =  -(7.3896e-02)*Sigma_sqrt_T**2 + (2.2475e-01)*Sigma_sqrt_T + -5.4974e-03
-    H_log_start = 0.15609 / (1 + np.exp(-4.5799*(Sigma_sqrt_T - 0.4876)))
+    #H_log_start = 0.15609 / (1 + np.exp(-4.5799*(Sigma_sqrt_T - 0.4876)))
+    H_log_start = 0.15609 / (1 + np.exp(-3.2385e+01*(Sigma_sqrt_T - 0.063465)))
     
     H_start_increase = round(S0 * np.exp(-H_log_start))  # Determine the start of increase
     H_end = S0 - 1
@@ -99,7 +100,7 @@ plt.figure(figsize=(10, 6))
 # Plot lines for actual best_beta values and estimated best fit
 for T, sigma in combinations:
     # Filter the DataFrame for each combination
-    subset = df[(df['T'] == T) & (df['sigma'] == sigma)]
+    subset = df[(df['T'] == T) & (df['sigma'] == sigma) & (df['m'] == m) & (df['best_beta'] >= 0.55)]
     
     # Sort by H for consistent line plotting
     subset_sorted = subset.sort_values(by='H')
