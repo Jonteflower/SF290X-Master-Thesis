@@ -5,7 +5,7 @@ from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score
 
 # Read the CSV file into a pandas DataFrame
-df = pd.read_csv('acc_data.csv')
+df = pd.read_csv('acc_data_m_100_50.csv')
 
 # Quadratic model function
 def quadratic_model(x, a, b, c):
@@ -22,6 +22,7 @@ def logarithmic_model(x, a, b):
 # Extract unique values of 'T' and 'sigma' from the DataFrame
 unique_Ts = df['T'].unique()
 unique_Sigmas = df['sigma'].unique()
+unique_ms = df['m'].unique()
 
 # Sort the arrays in case order matters for your calculations
 unique_Ts.sort()
@@ -31,21 +32,22 @@ x_values = []  # Store x values
 y_values = []  # Store y values
 
 # Iterate over unique combinations
-for T in unique_Ts:
-    for sigma in unique_Sigmas:
-        # Filter dataframe for the current combination
-        subset_df = df[(df['T'] == T) & (df['sigma'] == sigma)]
-        
-        # Calculate the product of Sigma and sqrt(T)
-        x = sigma * np.sqrt(T/50)
-        
-        # Find the maximum value of 'best_beta' in this subset
-        y = subset_df['best_beta'].max()
-        
-        # Append the values to the lists
-        if y > 0.68 and y < 0.8: 
-            x_values.append(x)
-            y_values.append(y)
+for m in unique_ms: 
+    for T in unique_Ts:
+        for sigma in unique_Sigmas:
+            # Filter dataframe for the current combination
+            subset_df = df[(df['T'] == T) & (df['sigma'] == sigma) & (df['m'] == m)]
+            
+            # Calculate the product of Sigma and sqrt(T/m)
+            x = sigma * np.sqrt(T/m)
+            
+            # Find the maximum value of 'best_beta' in this subset
+            y = subset_df['best_beta'].max()
+            
+            # Append the values to the lists
+            if y > 0.65 and y < 0.8: 
+                x_values.append(x)
+                y_values.append(y)
 
 print(f"Processed {len(x_values)} combinations.")
 
@@ -99,3 +101,6 @@ plt.ylabel('Maximum best_beta')
 plt.legend()
 plt.grid(True)
 plt.show()
+
+
+##  y = 7.0648e-01 / (1 + exp(-3.9661e+00(x - -4.9009e-01))) (R² = 0.9408)

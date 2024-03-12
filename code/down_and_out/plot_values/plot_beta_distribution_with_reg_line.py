@@ -4,12 +4,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
-
-# Add the 'code' directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Sample DataFrame
-df = pd.read_csv('acc_data_m.csv')
+df = pd.read_csv('acc_data_m_100_50.csv')
 m = 50
 
 # Filter out best_beta < 0.55
@@ -25,9 +23,10 @@ sample2 = df_filtered.sample(1).iloc[0]
 sigma2 = sample2['sigma']
 t2 = sample2['T']
 
-sample3 = df_filtered.sample(1).iloc[0]
-sigma3 = sample3['sigma']
-t3 = sample3['T']
+#sample3 = df_filtered.sample(1).iloc[0]
+sigma3 = df_filtered['sigma'].min()
+t3 = df_filtered['T'].max()
+
 
 ##### Regression line for Beta
 """
@@ -65,11 +64,9 @@ def regression_beta_engineer(T, sigma, H, S0):
     Sigma_sqrt_T = sigma * np.sqrt(T / m)
 
     #### TODO find this as a function of 
-    #beta_end = 0.7174 ### Make this a function of sigma*sqrt(T) maybe over m
     beta_end =  7.1432e-01 / (1 + np.exp(-3.2172e+01*(Sigma_sqrt_T + 6.4396e-02)))
      
     ### This is from the reg of increase point both Logistic and quadratic can be used
-    #H_log_start =  -(7.3896e-02)*Sigma_sqrt_T**2 + (2.2475e-01)*Sigma_sqrt_T + -5.4974e-03
     #H_log_start = 0.15609 / (1 + np.exp(-4.5799*(Sigma_sqrt_T - 0.4876)))
     H_log_start = 0.15609 / (1 + np.exp(-3.2385e+01*(Sigma_sqrt_T - 0.063465)))
     
@@ -112,12 +109,12 @@ for T, sigma in combinations:
     subset_sorted['estimated_beta'] = subset_sorted.apply(lambda row: regression_beta_engineer(row['T'], row['sigma'], row['H'], row['S0']), axis=1)
     
     # Plot the estimated best fit line
-    plt.plot(subset_sorted['H'], subset_sorted['estimated_beta'], '--', label=f'Est. Beta T={T}, sigma={sigma}')
+    plt.plot(subset_sorted['H'], subset_sorted['estimated_beta'], '--', label=f'Est. Beta T={T}, sigma={sigma}, prod={round(sigma*np.sqrt(T/m), 3)}')
 
 # Add labels and title
 plt.xlabel('H')
 plt.ylabel('best_beta')
-plt.title('Actual Best Beta vs general Equation for Best Beta')
+plt.title(f'Actual Best Beta vs general Equation for Best Beta, m={m}')
 plt.legend()
 
 # Show the plot

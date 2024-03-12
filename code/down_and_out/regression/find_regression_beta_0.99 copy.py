@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 # Load the CSV file
-df_combined = pd.read_csv('acc_data_3.csv')
+df_combined = pd.read_csv('acc_data_m_100_50.csv')
 
 # Assuming necessary columns exist
 df_combined['Sigma_sqrt_T'] = df_combined['sigma'] * np.sqrt(df_combined['T'])

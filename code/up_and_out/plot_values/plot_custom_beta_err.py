@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sys
 import os
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from equations.up_and_out_call import up_and_out_call
 from equations.adjusted_barrier import adjusted_barrier, adjusted_barrier_custom

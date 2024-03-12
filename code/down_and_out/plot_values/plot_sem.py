@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 ### Error is a funcion of the size of H, T, Sigma, 
-df = pd.read_csv("acc_data.csv")
+df = pd.read_csv("acc_data_m_100_50.csv")
 
 # Extracting accuracies and row numbers for the first 200 rows
 df_subset = df.head(200)

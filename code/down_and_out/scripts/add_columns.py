@@ -8,7 +8,7 @@ from equations.down_and_out_call_exact import down_and_call_book
 from generate_data.find_beta import find_optimal_beta
 
 def main():
-    file_name = 'acc_data_2.csv'
+    file_name = 'acc_data_m_100_50.csv'
     df = pd.read_csv(file_name)
 
     numeric_columns = ['T', 'm', 'sigma', 'H', 'S0', 'K', 'price_iter']

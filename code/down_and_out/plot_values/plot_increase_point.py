@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from generate_data.find_strictly_increase import find_strictly_increase
 
-csvFilePath = 'paper_values.csv'
+csvFilePath = 'acc_data_m_100.csv'
 #csvFilePath = 'data.csv'
 
 def test():

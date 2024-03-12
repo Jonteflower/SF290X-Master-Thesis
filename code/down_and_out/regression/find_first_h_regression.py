@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
 # Assuming df is already read from your CSV
-df = pd.read_csv('acc_data.csv')
+df = pd.read_csv('acc_data_m_100_50.csv')
 ###### Indicator regression
 
 # Quadratic model function
@@ -25,8 +25,8 @@ def logarithmic_model(x, a, b):
 def is_decreasing(arr):
     return all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1))
 
-def find_strictly_decrease(data, T_val, sigma_val):
-    df = data[(data['sigma'] == sigma_val) & (data['T'] == T_val)]
+def find_strictly_decrease(data, T_val, sigma_val, m):
+    df = data[(data['sigma'] == sigma_val) & (data['T'] == T_val)  & (data['m'] == m)]
     sorted_data = df.sort_values(by='H_log', ascending=False)
     
     if df.empty:
@@ -43,7 +43,7 @@ def find_strictly_decrease(data, T_val, sigma_val):
 # Extract unique values of sigma and T from the DataFrame
 unique_sigmas = df['sigma'].unique()
 unique_Ts = df['T'].unique()
-#unique_ms = df['m'].unique()
+unique_ms = df['m'].unique()
 
 # Sort the arrays in case order matters for your calculations
 unique_sigmas.sort()
@@ -54,15 +54,16 @@ products = []  # Store corresponding product values
 count = 0
 
 # Iterate over all combinations of unique sigma and T values
-for T in unique_Ts:
-    for sigma in unique_sigmas:
-        H_value = find_strictly_decrease(df, T, sigma)
-        count += 1
+for m in unique_ms:
+    for T in unique_Ts:
+        for sigma in unique_sigmas:
+            H_value = find_strictly_decrease(df, T, sigma, m)
+            count += 1
 
-        # Assuming find_strictly_decrease returns a value where positive indicates a valid result
-        if float(H_value) > 0:
-            h_values.append(H_value)
-            products.append(abs(sigma * np.sqrt(T/50)))
+            # Assuming find_strictly_decrease returns a value where positive indicates a valid result
+            if float(H_value) > 0:
+                h_values.append(H_value)
+                products.append(abs(sigma * np.sqrt(T/m)))
 
 print(f"Processed {count} combinations, obtained {len(h_values)} valid H values.")
 
