@@ -4,10 +4,13 @@ from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from generate_data.cooks_distance import filter_by_cooks_distance
 
 # Assuming df is already read from your CSV
-df = pd.read_csv('acc_data_m_100_50.csv')
-###### Indicator regression
+df = pd.read_csv('acc_data.csv')
 
 # Quadratic model function
 def quadratic_model(x, a, b, c):
@@ -67,9 +70,12 @@ for m in unique_ms:
 
 print(f"Processed {count} combinations, obtained {len(h_values)} valid H values.")
 
-# Convert lists to numpy arrays for curve fitting
+# Convert lists to numpy arrays for curve fitting and filter cooks distance
 h_values = np.array(h_values)
 products = np.array(products)
+products, h_values = filter_by_cooks_distance(products, h_values )
+products = products.ravel()
+h_values = h_values.ravel()
 
 # Fit the quadratic model to the data
 popt_quad, _ = curve_fit(quadratic_model, products, h_values)
@@ -100,22 +106,28 @@ x_fit = np.linspace(min(products), max(products), 100)
 
 # Plot the quadratic fitted curve
 y_fit_quad = quadratic_model(x_fit, *popt_quad)
-plt.plot(x_fit, y_fit_quad, color='red', label=f'Quadratic Curve (R² = {r_squared_quad:.4f})')
+plt.plot(x_fit, y_fit_quad, color='red', label=f'Quadratic Curve (R² = {r_squared_quad:.2f})')
 
 # Plot the logistic fitted curve
 y_fit_logistic = logistic_model(x_fit, *popt_logistic)
-plt.plot(x_fit, y_fit_logistic, color='green', label=f'Logistic Curve (R² = {r_squared_logistic:.4f})')
+plt.plot(x_fit, y_fit_logistic, color='green', label=f'Logistic Curve (R² = {r_squared_logistic:.2f})')
 
 # Plot the logarithmic fitted curve (ensure x_fit is positive)
 positive_x_fit = x_fit[x_fit > 0]
 y_fit_log = logarithmic_model(positive_x_fit, *popt_log)
-plt.plot(positive_x_fit, y_fit_log, color='purple', label=f'Logarithmic Curve (R² = {r_squared_log:.4f})')
+plt.plot(positive_x_fit, y_fit_log, color='purple', label=f'Logarithmic Curve (R² = {r_squared_log:.2f})')
 
 # Fit the quadratic model to the data
 popt_quad, _ = curve_fit(quadratic_model, products, h_values)
 predicted_values_quad = quadratic_model(products, *popt_quad)
 r_squared_quad = r2_score(h_values, predicted_values_quad)
 print(f"Quadratic model: y = {popt_quad[0]:.4e}x^2 + {popt_quad[1]:.4e}x + {popt_quad[2]:.4e} (R² = {r_squared_quad:.4f})")
+
+# Fit a simple linear regression model to the data
+coeffs_linear = np.polyfit(products, h_values, 1)
+# Generate y values based on the linear model coefficients
+y_fit_linear = np.polyval(coeffs_linear, x_fit)
+
 
 # Fit the logistic model to the data
 popt_logistic, _ = curve_fit(logistic_model, products, h_values, p0=[max(h_values), 1, np.median(products)])
@@ -129,6 +141,20 @@ positive_h_values = h_values[products > 0]
 popt_log, _ = curve_fit(logarithmic_model, positive_products, positive_h_values)
 predicted_values_log = logarithmic_model(positive_products, *popt_log)
 r_squared_log = r2_score(positive_h_values, predicted_values_log)
+
+# Calculate R-squared for the linear model
+ss_res = np.sum((h_values - np.polyval(coeffs_linear, products)) ** 2)
+ss_tot = np.sum((h_values - np.mean(h_values)) ** 2)
+r_squared_linear = 1 - (ss_res / ss_tot)
+
+# Plot the linear fitted curve
+plt.plot(x_fit, y_fit_linear, color='orange', label=f'Linear Curve (R² = {r_squared_linear:.2f})')
+
+# You might want to adjust the legend to include the new line
+plt.legend()
+
+# Print the linear model equation and its R-squared value
+print(f"Linear model: y = {coeffs_linear[0]:.4e}x + {coeffs_linear[1]:.4e} (R² = {r_squared_linear:.4f})")
 
 # Add titles and labels
 plt.title('H_log as a Function of Product (Sigma*sqrt(T)) with Fitted Curves')

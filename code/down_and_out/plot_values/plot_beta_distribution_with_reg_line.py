@@ -7,7 +7,7 @@ from scipy import stats
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Sample DataFrame
-df = pd.read_csv('acc_data_m_100_50.csv')
+df = pd.read_csv('acc_data.csv')
 m = 50
 
 # Filter out best_beta < 0.55

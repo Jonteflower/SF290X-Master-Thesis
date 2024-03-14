@@ -3,9 +3,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
 from sklearn.metrics import r2_score
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from generate_data.cooks_distance import filter_by_cooks_distance
 
 # Read the CSV file into a pandas DataFrame
-df = pd.read_csv('acc_data_m_100_50.csv')
+df = pd.read_csv('acc_data.csv')
 
 # Quadratic model function
 def quadratic_model(x, a, b, c):
@@ -52,8 +56,14 @@ for m in unique_ms:
 print(f"Processed {len(x_values)} combinations.")
 
 # Convert lists to numpy arrays for curve fitting
-x_values = np.array(x_values)
+# Convert lists to numpy arrays for curve fitting and filter cooks distance
 y_values = np.array(y_values)
+x_values = np.array(x_values)
+"""
+x_values, y_values = filter_by_cooks_distance(x_values, y_values )
+x_values = x_values.ravel()
+y_values = y_values.ravel()
+"""
 
 # Fit the quadratic model to the data
 popt_quad, _ = curve_fit(quadratic_model, x_values, y_values)
@@ -79,20 +89,20 @@ x_fit = np.linspace(min(x_values), max(x_values), 100)
 
 # Plot the quadratic fitted curve
 y_fit_quad = quadratic_model(x_fit, *popt_quad)
-plt.plot(x_fit, y_fit_quad, color='red', label=f'Quadratic Curve (R² = {r_squared_quad:.4f})')
+plt.plot(x_fit, y_fit_quad, color='red', label=f'Quadratic Curve (R² = {r_squared_quad:.2f})')
 
 # Plot the logistic fitted curve
 y_fit_logistic = logistic_model(x_fit, *popt_logistic)
-plt.plot(x_fit, y_fit_logistic, color='green', label=f'Logistic Curve (R² = {r_squared_logistic:.4f})')
+plt.plot(x_fit, y_fit_logistic, color='green', label=f'Logistic Curve (R² = {r_squared_logistic:.2})')
 
 # Plot the logarithmic fitted curve
 y_fit_log = logarithmic_model(x_fit, *popt_log)
-plt.plot(x_fit, y_fit_log, color='purple', label=f'Logarithmic Curve (R² = {r_squared_log:.4f})')
+plt.plot(x_fit, y_fit_log, color='purple', label=f'Logarithmic Curve (R² = {r_squared_log:.2f})')
 
 
 #### Print the model equations
 print(f"Logistic model: y = {popt_logistic[0]:.4e} / (1 + exp(-{popt_logistic[1]:.4e}(x - {popt_logistic[2]:.4e}))) (R² = {r_squared_logistic:.4f})")
-print(f"Quadratic model: y = {popt_quad[0]:.4e}x^2 + {popt_quad[1]:.4e}x + {popt_quad[2]:.4e} (R² = {r_squared_quad:.4f})")
+print(f"Quadratic model: y = {popt_quad[0]:.4e}x^2 + {popt_quad[1]:.4e}x + {popt_quad[2]:.2e} (R² = {r_squared_quad:.4f})")
 
 # Add titles and labels
 plt.title('Maximum best_beta vs Sigma * sqrt(T) with Fitted Curves')

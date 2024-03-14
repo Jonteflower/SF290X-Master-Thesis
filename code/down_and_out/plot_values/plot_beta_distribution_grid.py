@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 from scipy import stats
 
 # Sample DataFrame
-file = 'acc_data_m.csv'
+file = 'acc_data.csv'
 df = pd.read_csv(file)
 
 # Filter out best_beta < 0.55
-df_filtered = df[(df['best_beta'] >= 0.57) & (df['m'] == 25)]
+df_filtered = df[(df['best_beta'] >= 0.57) & (df['m'] == 100)]
 x_axis_key = 'H'
 
 # Randomly select a combination from df_filtered
