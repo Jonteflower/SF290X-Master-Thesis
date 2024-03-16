@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from generate_data.cooks_distance import filter_by_cooks_distance
 
 # Assuming df is already read from your CSV
-df = pd.read_csv('acc_data.csv')
+df = pd.read_csv('acc_data_m_50.csv')
 
 # Quadratic model function
 def quadratic_model(x, a, b, c):
@@ -75,7 +75,7 @@ h_values = np.array(h_values)
 products = np.array(products)
 products, h_values = filter_by_cooks_distance(products, h_values )
 products = products.ravel()
-h_values = h_values.ravel()
+h_values = h_values.ravel()*(-1)
 
 # Fit the quadratic model to the data
 popt_quad, _ = curve_fit(quadratic_model, products, h_values)
@@ -83,7 +83,14 @@ predicted_values_quad = quadratic_model(products, *popt_quad)
 r_squared_quad = r2_score(h_values, predicted_values_quad)
 
 # Fit the logistic model to the data
+"""
 popt_logistic, _ = curve_fit(logistic_model, products, h_values, p0=[max(h_values), 1, np.median(products)])
+predicted_values_logistic = logistic_model(products, *popt_logistic)
+r_squared_logistic = r2_score(h_values, predicted_values_logistic)
+"""
+
+p0_logistic = [min(h_values), -1, np.median(products)]  # Example initial guess
+popt_logistic, _ = curve_fit(logistic_model, products, h_values, p0=p0_logistic)
 predicted_values_logistic = logistic_model(products, *popt_logistic)
 r_squared_logistic = r2_score(h_values, predicted_values_logistic)
 
@@ -106,16 +113,16 @@ x_fit = np.linspace(min(products), max(products), 100)
 
 # Plot the quadratic fitted curve
 y_fit_quad = quadratic_model(x_fit, *popt_quad)
-plt.plot(x_fit, y_fit_quad, color='red', label=f'Quadratic Curve (R² = {r_squared_quad:.2f})')
+plt.plot(x_fit, y_fit_quad, color='red', label=f'Quadratic Curve (R² = {r_squared_quad:.4f})')
 
 # Plot the logistic fitted curve
 y_fit_logistic = logistic_model(x_fit, *popt_logistic)
-plt.plot(x_fit, y_fit_logistic, color='green', label=f'Logistic Curve (R² = {r_squared_logistic:.2f})')
+plt.plot(x_fit, y_fit_logistic, color='green', label=f'Logistic Curve (R² = {r_squared_logistic:.4f})')
 
 # Plot the logarithmic fitted curve (ensure x_fit is positive)
 positive_x_fit = x_fit[x_fit > 0]
 y_fit_log = logarithmic_model(positive_x_fit, *popt_log)
-plt.plot(positive_x_fit, y_fit_log, color='purple', label=f'Logarithmic Curve (R² = {r_squared_log:.2f})')
+plt.plot(positive_x_fit, y_fit_log, color='purple', label=f'Logarithmic Curve (R² = {r_squared_log:.4f})')
 
 # Fit the quadratic model to the data
 popt_quad, _ = curve_fit(quadratic_model, products, h_values)
@@ -148,7 +155,7 @@ ss_tot = np.sum((h_values - np.mean(h_values)) ** 2)
 r_squared_linear = 1 - (ss_res / ss_tot)
 
 # Plot the linear fitted curve
-plt.plot(x_fit, y_fit_linear, color='orange', label=f'Linear Curve (R² = {r_squared_linear:.2f})')
+plt.plot(x_fit, y_fit_linear, color='orange', label=f'Linear Curve (R² = {r_squared_linear:.4f})')
 
 # You might want to adjust the legend to include the new line
 plt.legend()

@@ -27,7 +27,6 @@ t2 = sample2['T']
 sigma3 = df_filtered['sigma'].min()
 t3 = df_filtered['T'].max()
 
-
 ##### Regression line for Beta
 """
 def regression_beta_engineer(T, sigma, H, S0):
@@ -71,7 +70,7 @@ def regression_beta_engineer(T, sigma, H, S0):
     H_log_start = 0.15609 / (1 + np.exp(-3.2385e+01*(Sigma_sqrt_T - 0.063465)))
     
     H_start_increase = round(S0 * np.exp(-H_log_start))  # Determine the start of increase
-    H_end = S0 - 1
+    H_end = S0-1
 
     # Start with a constant beta
     beta = beta_start

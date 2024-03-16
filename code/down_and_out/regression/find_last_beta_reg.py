@@ -49,7 +49,7 @@ for m in unique_ms:
             y = subset_df['best_beta'].max()
             
             # Append the values to the lists
-            if y > 0.65 and y < 0.8: 
+            if y > 0.6 and y < 0.8: 
                 x_values.append(x)
                 y_values.append(y)
 
